@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:fragment="head">
+    <title>Turing Machine</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
+</head>
+<body>
+<div class="container">
+    <p style="font-weight: bold; font-size: large; margin-bottom: 2px; margin-top: 2px" th:text="'Input: ' + ${dto.getFormatedInput()}"></p>
+    <p style="font-weight: bold; font-size: large; margin-bottom: 2px; margin-top: 2px" th:if="!${finish}" th:text="'Current state: ' + ${dto.currentState}"></p>
+    <p style="font-weight: bold; font-size: large; margin-bottom: 2px; margin-top: 2px" th:if="${finish}" th:text="'Finish state: ' + ${dto.currentState}"></p>
+    <p style="font-weight: bold; font-size: large; margin-bottom: 2px; margin-top: 2px" th:text="${dto.statesRoute}"></p>
+
+    <!--/*@thymesVar id="dto" type="pl.beny.lm3.dto.TuringDTO"*/-->
+    <table>
+        <tr>
+            <td style="text-align: center; font-weight: bold; font-size: x-large" th:each="arrow : ${dto.getArrows()}" th:text="${arrow}"></td>
+        </tr>
+        <tr>
+            <td style="text-align: center; font-weight: bold; font-size: x-large" th:each="bit : ${dto.getFormatedResultList()}" th:text="${bit}"></td>
+        </tr>
+    </table>
+
+    <form th:action="@{/run}" method="post" class="mt-2 w-50">
+        <input name="automatic" id="automatic-false" type="hidden" value="false" />
+        <div class="btn-toolbar">
+            <div class="btn-group w-100">
+                <button class="btn btn-primary w-50" type="submit" th:disabled="${finish}" autofocus th:text="'NEXT STEP'"></button>
+            </div>
+        </div>
+    </form>
+
+    <form id="auto" th:action="@{/run}" method="post" class="mt-2 w-50">
+        <input name="automatic" id="automatic-true" type="hidden" value="true" />
+        <div class="btn-toolbar">
+            <div class="btn-group w-100">
+                <button class="btn btn-primary w-50" type="submit" th:disabled="${finish}" th:text="'AUTOMATIC MODE'"></button>
+            </div>
+        </div>
+    </form>
+
+    <form th:action="@{/}" method="get" class="mt-2 w-50">
+        <div class="btn-toolbar">
+            <div class="btn-group w-100">
+                <button class="btn btn-primary w-50" type="submit" autofocus th:text="'START OVER'"></button>
+            </div>
+        </div>
+    </form>
+
+</div>
+
+<script th:inline="javascript" th:if="${dto.automatic}">
+    setTimeout(function(){ document.getElementById("auto").submit(); }, 3000);
+</script>
+
+</body>
+</html>
